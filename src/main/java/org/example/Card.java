@@ -22,6 +22,6 @@ public class Card {
         if (num == 11) nameCard = "horse";
         if (num == 12) nameCard = "king";
         if (num == 1) nameCard = "as";
-        return nameCard + "of" + stick;
+        return nameCard + " of " + stick;
     }
 }

@@ -1,5 +1,4 @@
 package org.example;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,10 +6,12 @@ public class Player {
     private String name;
     private ArrayList<Card> hand;
     private Random random = new Random();
+    private boolean isComputer;
 
     public Player(String name, boolean b){
         this.name = name;
-        this.hand = new ArrayList<>(); // ArrayList de las cartas de la mano
+        this.isComputer = b; // Guardamos si es máquina o no
+        this.hand = new ArrayList<>();
     }
 
     public String getName() {
@@ -50,6 +51,10 @@ public class Player {
     public boolean decideDistrust(int totalWell){ // La máquina decide si desconfiar
         // La máquina solo desconfía si el pozo tiene más de 5 cartas y la probabilidad del 50% del boolean sale True
         return totalWell > 5 && random.nextBoolean();
+    }
+
+    public boolean isComputer() {
+        return isComputer;
     }
 
 }
