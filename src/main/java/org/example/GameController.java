@@ -28,11 +28,12 @@ public class GameController {
 
         // LÓGICA DE JUEGO
         Player[] players = {p1, p2, p3}; // Guardamos los jugadores en un Array para rotarlos
-        int turn = 0;
+        int turn = 0; // Iniciamos con el jugador 1
         boolean gameOver = false; // Establecemos una variable que nos indicará cuando acaba el bucle
-        int currentCardNumber = 1; // El número que se debe jugar
+        int currentCardNumber = -1; // -1 indica que la ronda aún no tiene un número asignado (el pozo está vacío)
         while (!gameOver) {
-
+            Player currentPlayer = players[turn]; // Identificamos quién juega ahora
+            Player nextPlayer = players[(turn + 1) % 3]; // Identificamos quién es el siguiente (el que puede desconfiar)
         }
     }
     }
