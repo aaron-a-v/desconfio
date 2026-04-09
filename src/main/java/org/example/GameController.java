@@ -34,6 +34,30 @@ public class GameController {
         while (!gameOver) {
             Player currentPlayer = players[turn]; // Identificamos quién juega ahora
             Player nextPlayer = players[(turn + 1) % 3]; // Identificamos quién es el siguiente (el que puede desconfiar)
+
+            // Mostramos el estado incial con la cantidad de cartas de los oponentes y la cantidad en el pozo
+            view.showTable(players[(turn + 1) % 3].getHand().size(), players[(turn + 2) % 3].getHand().size(), table.getTotalWell());
+
+            // LÓGICA DE INICIO DE RONDA
+            if (table.getTotalWell() == 0) { // Si no hay cartas en el pozo, el jugador actual elige el número
+                if (currentPlayer.isComputer()) { // Si es la máquina
+                    currentCardNumber = currentPlayer.getHand().get(0).getNum(); // Elige el número de su primera carta
+                } else { // Si es humano
+                    boolean validNumber = false; // Variable para validar la carta elegida
+                    while (!validNumber) { // Permanecemos en el bucle hasta que se elija un número válido de la baraja
+                        System.out.println(currentPlayer.getName() + ", choose the card for this round (1-7, 10-12):");
+                        currentCardNumber = scan.nextInt(); // Leemos el número
+                        scan.nextLine(); // Limpiamos el buffer del Scanner
+                        // Validamos que el número exista (del 1 al 12, saltando 8 y 9)
+                        if (currentCardNumber >= 1 && currentCardNumber <= 12 && currentCardNumber != 8 && currentCardNumber != 9) {
+                            validNumber = true; // Salimos del bucle de elección
+                        } else {
+                            System.out.println("Invalid number!");
+                        }
+                    }
+                }
+                System.out.println(">>> ROUND THEME: " + currentCardNumber + "s <<<"); // Informamos el número de la ronda
+            }
         }
     }
     }
