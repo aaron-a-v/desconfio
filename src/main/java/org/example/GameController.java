@@ -40,14 +40,14 @@ public class GameController {
 
             // LÓGICA DE INICIO DE RONDA
             if (table.getTotalWell() == 0) { // Si no hay cartas en el pozo, el jugador actual elige el número
-                if (currentPlayer.isComputer()) { // Si es la máquina
-                    currentCardNumber = currentPlayer.getHand().get(0).getNum(); // Elige el número de su primera carta
-                } else { // Si es humano
+                if (currentPlayer.isComputer()) { // Comprobamos si es el turno de la máquina
+                    currentCardNumber = currentPlayer.getHand().get(0).getNum(); // La máquina elige el número de su primera carta
+                } else { // Comprobamos si es el turno de un jugador
                     boolean validNumber = false; // Variable para validar la carta elegida
                     while (!validNumber) { // Permanecemos en el bucle hasta que se elija un número válido de la baraja
                         System.out.println(currentPlayer.getName() + ", choose the card for this round (1-7, 10-12):");
-                        currentCardNumber = scan.nextInt(); // Leemos el número
-                        scan.nextLine(); // Limpiamos el buffer del Scanner
+                        currentCardNumber = scan.nextInt(); // Elegimos el número de la carta con la que vamos a empezar
+                        scan.nextLine();
                         // Validamos que el número exista (del 1 al 12, saltando 8 y 9)
                         if (currentCardNumber >= 1 && currentCardNumber <= 12 && currentCardNumber != 8 && currentCardNumber != 9) {
                             validNumber = true; // Salimos del bucle de elección
@@ -58,6 +58,18 @@ public class GameController {
                 }
                 System.out.println(">>> ROUND THEME: " + currentCardNumber + "s <<<"); // Informamos el número de la ronda
             }
+
+            // --- LÓGICA DE TIRAR CARTA ---
+            int cardIndex; // Índice de la carta elegida de la mano
+            if (currentPlayer.isComputer()) { // Si es el turno de la máquina
+                cardIndex = currentPlayer.selectCardComputer(currentCardNumber); // Usa su lógica para decidir qué tirar
+            } else { // Si es el turno de un jugador
+                cardIndex = view.askPlayerChoice(currentPlayer); // Elige que carta de su mano va a tirar
+            }
+
+            Card playedCard = currentPlayer.extractCard(cardIndex); // Sacamos la carta de la mano del jugador
+            table.addToWell(playedCard); // Ponemos la carta en el pozo (boca abajo)
+            System.out.println(currentPlayer.getName() + " says: I played a " + currentCardNumber); // Declaración pública
         }
     }
     }
