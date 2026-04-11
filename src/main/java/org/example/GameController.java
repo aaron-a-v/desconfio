@@ -71,7 +71,7 @@ public class GameController {
             }
 
             // Extraemos las cartas y las ponemos en el pozo
-            ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices);
+            java.util.ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices);
             for (Card c : cardsPlayed) {
                 table.addToWell(c);
             }
