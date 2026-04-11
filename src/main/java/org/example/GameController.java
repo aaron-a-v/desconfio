@@ -1,13 +1,16 @@
 package org.example;
+import java.util.Scanner;
 
 public class GameController {
     private Table table;
     private GameView view;
+    private Scanner scan;
     private Player p1, p2, p3;
     private int currentCardNumber; // El número que se está jugando (ej. todos juegan "Ases")
 
     public GameController() {
         this.view = new GameView();
+        this.scan = new Scanner(System.in);
     }
 
     public void play(){
