@@ -59,7 +59,7 @@ public class GameController {
                 System.out.println(">>> ROUND THEME: " + currentCardNumber + "s <<<"); // Informamos el número de la ronda
             }
 
-            // --- LÓGICA DE TIRAR CARTA ---
+            // LÓGICA DE TIRAR CARTA
             int cardIndex; // Índice de la carta elegida de la mano
             if (currentPlayer.isComputer()) { // Si es el turno de la máquina
                 cardIndex = currentPlayer.selectCardComputer(currentCardNumber); // Usa su lógica para decidir qué tirar
@@ -70,7 +70,47 @@ public class GameController {
             Card playedCard = currentPlayer.extractCard(cardIndex); // Sacamos la carta de la mano del jugador
             table.addToWell(playedCard); // Ponemos la carta en el pozo (boca abajo)
             System.out.println(currentPlayer.getName() + " says: I played a " + currentCardNumber); // Declaración pública
+
+            // LÓGICA DE DESCONFÍO
+            boolean distrust; // Variable para saber si el siguiente jugador desconfía
+            if (nextPlayer.isComputer()) { // Si el siguiente es la máquina...
+                distrust = nextPlayer.decideDistrust(table.getTotalWell()); // Decide según el tamaño del pozo
+            } else { // Si el siguiente es humano...
+                System.out.println(nextPlayer.getName() + ", do you believe them? (y/n)");
+                distrust = (view.askDistrust() == 'y'); // Lee 'y' para sí, cualquier otra cosa para no
+            }
+
+            // DECISIÓN DE DESCONFIAR
+            if (distrust) { // Si el jugador siguiente decidió desconfiar
+                // Miramos la carta real que se acaba de jugar en el pozo
+                Card lastCard = table.peekLastCard(); 
+                System.out.println("The card was actually: " + lastCard.toString());
+                
+                // Comparamos el número real con el número que se decía estar jugando
+                if (lastCard.getNum() == currentCardNumber) { 
+                    // El jugador decía la verdad: El que desconfió pierde y se lleva el pozo
+                    System.out.println(">>> " + nextPlayer.getName() + " was WRONG! They take the whole well.");
+                    table.deliverLoser(nextPlayer); // El método de Table entrega todas las cartas al perdedor
+                } else {
+                    // El jugador mentía: El jugador actual pierde y se lleva el pozo
+                    System.out.println(">>> " + currentPlayer.getName() + " was CAUGHT LYING! They take the whole well.");
+                    table.deliverLoser(currentPlayer); // El mentiroso recibe el castigo
+                }
+                
+                // Tras un desconfío, el pozo queda vacío y se reinicia el tema de la ronda
+                currentCardNumber = -1; 
+            }
+
+            // COMPROBACIÓN DE VICTORIA Y CAMBIO DE TURNO
+            // Si el jugador que acaba de tirar se ha quedado sin cartas, gana la partida
+            if (currentPlayer.getHand().isEmpty()) { 
+                System.out.println("¡¡¡ CONGRATULATIONS " + currentPlayer.getName() + " !!! You won the game!");
+                gameOver = true; // Rompemos el bucle while
+            } else {
+                // Si nadie ha ganado, pasamos el turno al siguiente jugador (0 -> 1 -> 2 -> 0)
+                turn = (turn + 1) % 3;
+            }
         }
-    }
+        System.out.println("Thanks for playing Distrust!");
     }
 }
