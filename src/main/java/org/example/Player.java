@@ -57,4 +57,14 @@ public class Player {
         return isComputer;
     }
 
+    public ArrayList<Card> extractMultipleCards(int[] indices) { // Método que acepte el array de índices
+        ArrayList<Card> chosenCards = new ArrayList<>();
+        // Ordenamos de mayor a menor para no desordenar el ArrayList al borrar
+        java.util.Arrays.sort(indices);
+        for (int i = indices.length - 1; i >= 0; i--) {
+            chosenCards.add(hand.remove(indices[i])); // Eliminamos de la mano y lo guardamos en la lista de cartas jugadas
+        }
+        return chosenCards;
+    }
+
 }

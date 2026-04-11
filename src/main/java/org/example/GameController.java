@@ -63,22 +63,25 @@ public class GameController {
             }
 
             // LÓGICA DE TIRAR CARTA
-            int cardIndex; // Índice de la carta elegida de la mano
+            int[] indices; // Índice de la carta elegida de la mano
             if (currentPlayer.isComputer()) { // Si es el turno de la máquina
-                cardIndex = currentPlayer.selectCardComputer(currentCardNumber); // Usa su lógica para decidir qué tirar
+                indices = new int[]{ currentPlayer.selectCardComputer(currentCardNumber) }; // Usa su lógica para decidir qué tirar
             } else { // Si es el turno de un jugador
                 cardIndex = view.askPlayerChoice(currentPlayer); // Elige que carta de su mano va a tirar
             }
 
-            Card playedCard = currentPlayer.extractCard(cardIndex); // Sacamos la carta de la mano del jugador
-            table.addToWell(playedCard); // Ponemos la carta en el pozo (boca abajo)
-            System.out.println(currentPlayer.getName() + " says: I played a " + currentCardNumber); // Declaración pública
+            // Extraemos las cartas y las ponemos en el pozo
+            java.util.ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices);
+            for (Card c : cardsPlayed) {
+                table.addToWell(c);
+            }
+            System.out.println(currentPlayer.getName() + " played " + cardsPlayed.size() + " cards as " + currentCardNumber + "s.");
 
             // LÓGICA DE DESCONFÍO
             boolean distrust; // Variable para saber si el siguiente jugador desconfía
-            if (nextPlayer.isComputer()) { // Si el siguiente es la máquina...
+            if (nextPlayer.isComputer()) { // Si el siguiente es la máquina
                 distrust = nextPlayer.decideDistrust(table.getTotalWell()); // Decide según el tamaño del pozo
-            } else { // Si el siguiente es humano...
+            } else { // Si el siguiente es humano
                 System.out.println(nextPlayer.getName() + ", do you believe them? (y/n)");
                 distrust = (view.askDistrust() == 'y'); // Lee 'y' para sí, cualquier otra cosa para no
             }

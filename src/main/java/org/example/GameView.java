@@ -39,15 +39,25 @@ public class GameView {
         System.out.println("Number of cards of the Well: "+cardsWell);
     }
 
-    public int askPlayerChoice(Player p) { // El jugador elige la carta o cartas que quiere usar
-        System.out.println(p.getName()+" It's your turn");
-        System.out.println("These are your cards:");
+    public int[] askPlayerChoices(Player p) {
+        System.out.println("\n" + p.getName() + ", it's your turn.");
+        System.out.println("Your cards (choose one or more, e.g., '1 3'):");
+        
+        // Mostramos la mano
         for (int i = 0; i < p.getHand().size(); i++) {
-            System.out.println((i+1) + " " + p.getHand().get(i).toString());
+            System.out.println((i + 1) + " - " + p.getHand().get(i).toString());
         }
-        int election = scan.nextInt();
-        scan.nextLine();
-        return election - 1;
+
+        // Leemos la línea completa (ej: "1 2 4")
+        String input = scan.nextLine();
+        String[] parts = input.split(" "); // Dividimos por espacios
+        int[] indices = new int[parts.length];
+
+        for (int i = 0; i < parts.length; i++) {
+            // Restamos 1 para convertir la elección del usuario alos índices
+            indices[i] = Integer.parseInt(parts[i]) - 1;
+        }
+        return indices;
     }
 
     public char askDistrust(){ // El jugador elige si quiere o no desconfiar
