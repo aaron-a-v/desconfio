@@ -67,7 +67,7 @@ public class GameController {
                         }
                     }
                 }
-                System.out.println(">>> ROUND THEME: " + currentCardNumber + "s <<<"); // Informamos el número de la ronda
+                System.out.println(">>> ROUND THEME: " + currentCardNumber + " <<<"); // Informamos el número de la ronda
             }
 
             // LÓGICA DE TIRAR CARTA
