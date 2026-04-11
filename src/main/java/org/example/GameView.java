@@ -41,12 +41,14 @@ public class GameView {
 
     public int[] askPlayerChoices(Player p) {
         System.out.println("\n" + p.getName() + ", it's your turn.");
-        System.out.println("Your cards (choose one or more, e.g., '1 3'):");
+        System.out.println("Your cards (choose one or more. Example: 1 3):");
         
         // Mostramos la mano
         for (int i = 0; i < p.getHand().size(); i++) {
             System.out.println((i + 1) + " - " + p.getHand().get(i).toString());
         }
+        
+        System.out.println("Write you election:");
 
         // Leemos la línea completa (ej: "1 2 4")
         String input = scan.nextLine();
