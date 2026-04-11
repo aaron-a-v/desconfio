@@ -46,6 +46,13 @@ public class GameController {
                 if (currentPlayer.isComputer()) { // Comprobamos si es el turno de la máquina
                     currentCardNumber = currentPlayer.getHand().get(0).getNum(); // La máquina elige el número de su primera carta
                 } else { // Comprobamos si es el turno de un jugador
+                    
+                    // Mostramos las cartas al jugador humano para que sepa qué tiene antes de decidir
+                    System.out.println("\n" + currentPlayer.getName() + ", look at your hand before choosing a rank:");
+                    for (int i = 0; i < currentPlayer.getHand().size(); i++) {
+                        System.out.println((i + 1) + " " + currentPlayer.getHand().get(i).toString());
+                    }
+
                     boolean validNumber = false; // Variable para validar la carta elegida
                     while (!validNumber) { // Permanecemos en el bucle hasta que se elija un número válido de la baraja
                         System.out.println(currentPlayer.getName() + ", choose the card for this round (1-7, 10-12):");
