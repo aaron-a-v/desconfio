@@ -43,11 +43,11 @@ public class GameView {
         System.out.println(p.getName()+" It's your turn");
         System.out.println("These are your cards:");
         for (int i = 0; i < p.getHand().size(); i++) {
-            System.out.println(i + " " + p.getHand().get(i).toString());
+            System.out.println((i+1) + " " + p.getHand().get(i).toString());
         }
         int election = scan.nextInt();
         scan.nextLine();
-        return election;
+        return election - 1;
     }
 
     public char askDistrust(){ // El jugador elige si quiere o no desconfiar
