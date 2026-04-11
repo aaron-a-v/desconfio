@@ -67,11 +67,11 @@ public class GameController {
             if (currentPlayer.isComputer()) { // Si es el turno de la máquina
                 indices = new int[]{ currentPlayer.selectCardComputer(currentCardNumber) }; // Usa su lógica para decidir qué tirar
             } else { // Si es el turno de un jugador
-                cardIndex = view.askPlayerChoice(currentPlayer); // Elige que carta de su mano va a tirar
+                indices = view.askPlayerChoices(currentPlayer); // Elige que cartas de su mano va a tirar
             }
 
             // Extraemos las cartas y las ponemos en el pozo
-            java.util.ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices);
+            ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices);
             for (Card c : cardsPlayed) {
                 table.addToWell(c);
             }

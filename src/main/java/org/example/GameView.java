@@ -54,7 +54,7 @@ public class GameView {
         int[] indices = new int[parts.length];
 
         for (int i = 0; i < parts.length; i++) {
-            // Restamos 1 para convertir la elección del usuario alos índices
+            // Restamos 1 para convertir la elección del usuario a los índices
             indices[i] = Integer.parseInt(parts[i]) - 1;
         }
         return indices;
