@@ -73,6 +73,7 @@ public class GameController {
             // LÓGICA DE TIRAR CARTA
             int[] indices; // Índice de la carta elegida de la mano
             if (currentPlayer.isComputer()) { // Si es el turno de la máquina
+                System.out.print("\n"+"Machine is thinking..."+"\n");
                 indices = new int[]{ currentPlayer.selectCardComputer(currentCardNumber) }; // Usa su lógica para decidir qué tirar
             } else { // Si es el turno de un jugador
                 indices = view.askPlayerChoices(currentPlayer); // Elige que cartas de su mano va a tirar
@@ -90,7 +91,8 @@ public class GameController {
             if (nextPlayer.isComputer()) { // Si el siguiente es la máquina
                 distrust = nextPlayer.decideDistrust(table.getTotalWell()); // Decide según el tamaño del pozo
             } else { // Si el siguiente es humano
-                System.out.println(nextPlayer.getName());
+                System.out.println();
+                System.out.println(nextPlayer.getName() + ". It's your turn");
                 distrust = (view.askDistrust() == 'y'); // Lee 'y' para sí, cualquier otra cosa para no
             }
 
