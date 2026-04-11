@@ -33,7 +33,7 @@ public class GameController {
         Player[] players = {p1, p2, p3}; // Guardamos los jugadores en un Array para rotarlos
         int turn = 0; // Iniciamos con el jugador 1
         boolean gameOver = false; // Establecemos una variable que nos indicará cuando acaba el bucle
-        currentCardNumber = -1; // -1 indica que la ronda aún no tiene un número asignado (el pozo está vacío)
+        int currentCardNumber = -1; // -1 indica que la ronda aún no tiene un número asignado (el pozo está vacío)
         
         while (!gameOver) {
             Player currentPlayer = players[turn]; // Identificamos quién juega ahora
@@ -115,7 +115,8 @@ public class GameController {
                 currentCardNumber = -1; 
 
                 // Cambiamos el turno de escoger carta al siguiente jugador:
-                turn = (turn + 1) % 3; 
+                int queDesconfioIndex = (turn + 1) % 3; 
+                turn = (queDesconfioIndex + 1) % 3; // El turno pasa al siguiente del que desconfió
                 System.out.println("\n--- NEW ROUND! It's " + players[turn].getName() + "'s turn to choose a number ---");
                 
                 // Saltamos el resto del bucle para volver al inicio con el nuevo turno
