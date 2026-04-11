@@ -102,6 +102,13 @@ public class GameController {
                 
                 // Tras un desconfío, el pozo queda vacío y se reinicia el tema de la ronda
                 currentCardNumber = -1; 
+
+                // Cambiamos el turno de escoger carta al siguiente jugador:
+                turn = (turn + 1) % 3; 
+                System.out.println("\n--- NEW ROUND! It's " + players[turn].getName() + "'s turn to choose a number ---");
+                
+                // Saltamos el resto del bucle para volver al inicio con el nuevo turno
+                continue;
             }
 
             // COMPROBACIÓN DE VICTORIA Y CAMBIO DE TURNO
