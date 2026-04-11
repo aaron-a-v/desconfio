@@ -90,9 +90,9 @@ public class GameController {
                 System.out.println("The card was actually: " + lastCard.toString());
                 
                 // Comparamos el número real con el número que se decía estar jugando
-                if (lastCard.getNum() == currentCardNumber) { 
+                if (lastCard.getNum() == currentCardNumber || lastCard.getNum() == 1) { 
                     // El jugador decía la verdad: El que desconfió pierde y se lleva el pozo
-                    System.out.println(">>> " + nextPlayer.getName() + " was WRONG! They take the whole well.");
+                    System.out.println(">>> " + nextPlayer.getName() + " was WRONG! (The 1 acts as a Joker). They take the whole well.");
                     table.deliverLoser(nextPlayer); // El método de Table entrega todas las cartas al perdedor
                 } else {
                     // El jugador mentía: El jugador actual pierde y se lleva el pozo

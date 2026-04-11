@@ -23,12 +23,12 @@ public class GameView {
     }
 
     public String askPlayerName1(){ // Preguntar por sus nombres
-        System.out.println("Write your Player1: ");
+        System.out.println("Write your name Player1: ");
         return scan.nextLine();
     }
 
     public String askPlayerName2(){ // Preguntar por sus nombres
-        System.out.println("Write your Player2: ");
+        System.out.println("Write your name Player2: ");
         return scan.nextLine();
     }
 
