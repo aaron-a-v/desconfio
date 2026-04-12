@@ -58,7 +58,7 @@ public class GameController {
                     // Mostramos las cartas al jugador humano para que sepa qué tiene antes de decidir
                     System.out.println("\n" + currentPlayer.getName() + ", look at your hand before choosing a rank:");
                     for (int i = 0; i < currentPlayer.getHand().size(); i++) {
-                        System.out.println((i + 1) + " " + currentPlayer.getHand().get(i).toString());
+                        System.out.println((i + 1) + " - " + currentPlayer.getHand().get(i).toString());
                     }
 
                     boolean validNumber = false; // Variable para validar la carta elegida
