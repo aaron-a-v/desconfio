@@ -7,6 +7,7 @@ public class GameController {
     private Scanner scan;
     private Player p1, p2, p3;
     private int currentCardNumber; // El número que se está jugando (ej. todos juegan "Ases")
+    private java.util.HashMap<String, Integer> lieCounter; // Hashmap para contar las veces que pillaron a cada jugador
 
     public GameController() {
         this.view = new GameView();
@@ -21,6 +22,11 @@ public class GameController {
         p1 = new Player(name1, false); // Le decimos que el p1 es humano
         p2 = new Player(name2, false); // Le decimos que el p2 es humano
         p3 = new Player("Machine", true); // Le decimos que el p3 es la máquina
+
+        lieCounter = new java.util.HashMap<>(); // Añadimos los jugadores al hashmap que creamos
+        lieCounter.put(p1.getName(), 0);
+        lieCounter.put(p2.getName(), 0);
+        lieCounter.put(p3.getName(), 0);
 
         this.table = new Table(); 
         view.showGreeting(name1); // Le damos la bienvenida a los jugadores
@@ -111,6 +117,8 @@ public class GameController {
                 } else {
                     // El jugador mentía: El jugador actual pierde y se lleva el pozo
                     System.out.println(">>> " + currentPlayer.getName() + " was CAUGHT LYING! They take the whole well.");
+                    int currentLies = lieCounter.get(currentPlayer.getName());
+                    lieCounter.put(currentPlayer.getName(), currentLies + 1); // Actualizamos el Hashmap para el jugador que mintió
                     table.deliverLoser(currentPlayer); // El mentiroso recibe el castigo
                 }
                 
@@ -136,7 +144,9 @@ public class GameController {
                 turn = (turn + 1) % 3;
             }
         }
-        System.out.println("Game Over.");
-        System.out.println("Thanks for playing Distrust!");
+        System.out.println("\nGame Over.");
+        System.out.println(">>> FINAL STATISTICS (Lies caught) <<<<");
+        lieCounter.forEach((name, count) -> { System.out.println(name + ": " + count + " times caught lying."); }); // Mostramos las estadísticas al final
+        System.out.println("\nThanks for playing Distrust!");
     }
 }
