@@ -49,8 +49,14 @@ public class Player {
 
 
     public boolean decideDistrust(int totalWell){ // La máquina decide si desconfiar
-        // La máquina solo desconfía si el pozo tiene más de 5 cartas y la probabilidad del 50% del boolean sale True
-        return totalWell > 5 && random.nextBoolean();
+        // Si el pozo es de 5 cartas o más, la máquina tiene un 75% de probabilidades de desconfiar
+        if (totalWell > 5) {
+            return random.nextInt(100) < 75;
+        } 
+        // Si el pozo es de 5 o menos, mantiene una probabilidad del 50%
+        else {
+            return random.nextBoolean(); // nextBoolean() es equivalente al 50%
+        }
     }
 
     public boolean isComputer() {
