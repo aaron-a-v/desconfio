@@ -38,6 +38,7 @@ public class GameController {
         while (!gameOver) {
             Player currentPlayer = players[turn]; // Identificamos quién juega ahora
             Player nextPlayer = players[(turn + 1) % 3]; // Identificamos quién es el siguiente (el que puede desconfiar)
+            currentPlayer.checkAndRemoveQuartets(); // Comprobamos que no tenga 4 cartas iguales
 
             // Mostramos el estado incial con la cantidad de cartas de los oponentes y la cantidad en el pozo
             view.showTable(players[(turn + 1) % 3].getHand().size(), players[(turn + 2) % 3].getHand().size(), table.getTotalWell());

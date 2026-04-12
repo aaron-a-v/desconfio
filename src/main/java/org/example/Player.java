@@ -67,4 +67,31 @@ public class Player {
         return chosenCards;
     }
 
+    public void checkAndRemoveQuartets() {
+        // Creamos un array de 13 posiciones que serva de contador: la posición 1 contará cuántos "Ases" hay, etc.
+        int[] counts = new int[13]; 
+        
+        // Recorremos cada carta que el jugador tiene en su mano
+        for (Card c : hand) {
+            // Obtenemos el número de la carta y sumamos 1 en su posición correspondiente del contador
+            counts[c.getNum()]++;
+        }
+
+        // Ahora revisamos nuestro contador del 2 al 12 (saltamos el 1 porque es comodín)
+        for (int num = 2; num <= 12; num++) {
+            // Si el contador para un número específico ha llegado a 4...
+            if (counts[num] == 4) {
+                // Informamos por consola que se ha encontrado un cuarteto
+                System.out.println("\n" + name + " has the four cards of " + num + " and removes them from the game!");
+                
+                // Guardamos el número en una variable final para poder usarla
+                int numToRemove = num;
+                
+                // Borramos de la lista 'hand' todas las cartas cuyo número coincida con el cuarteto
+                // removeIf recorre la lista y elimina automáticamente las que cumplan la condición
+                hand.removeIf(card -> card.getNum() == numToRemove);
+            }
+        }
+    }
+
 }
