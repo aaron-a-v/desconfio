@@ -32,12 +32,16 @@ public class GameView {
         return scan.nextLine();
     }
 
-    public void showTable(int cardsRival1, int cardsRival2, int cardsWell){ // Mostrar como está el juego
-        System.out.println("********Table status*******");
-        System.out.println("Number of opponent's cards 1: "+cardsRival1);
-        System.out.println("Number of opponent's cards 2: "+cardsRival2);
-        System.out.println("Number of cards of the Well: "+cardsWell);
+    public void showTable(ArrayList<Player> allPlayers, Player currentPlayer, int cardsWell) {
+    System.out.println("\n******** ESTADO DE LA MESA *******");
+    for (Player p : allPlayers) {
+        if (p != currentPlayer) {
+            System.out.println("Cartas de " + p.getName() + ": " + p.getHand().size());
+        }
     }
+    System.out.println("Cartas en el Pozo: " + cardsWell);
+    System.out.println("**********************************");
+}
 
     public int[] askPlayerChoices(Player p) {
         System.out.println("\n" + p.getName() + ", it's your turn.");

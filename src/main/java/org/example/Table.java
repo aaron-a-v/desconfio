@@ -22,19 +22,18 @@ public class Table {
         Collections.shuffle(deck);
     } // Barajamos las cartas
 
-    public void distribute(Player p1, Player p2, Player p3){
-        while (!deck.isEmpty()) { // Distribuímos las cartas a cada jugador mientras que el mazo no esté a 0
-            if (!deck.isEmpty()){ // Le damos la carta al jugador 1 mientras que el mazo no esté a 0
-                p1.receiveCard(deck.remove(deck.size()-1));
-            }
-            if (!deck.isEmpty()){ // Le damos la carta al jugador 2 mientras que el mazo no esté a 0
-                p2.receiveCard(deck.remove(deck.size()-1));
-            }
-            if (!deck.isEmpty()){ // Le damos la carta al jugador 3 mientras que el mazo no esté a 0
-                p3.receiveCard(deck.remove(deck.size()-1));
-            }
-        }
+    public void distribute(ArrayList<Player> players) {
+    int playerIndex = 0;
+    while (!deck.isEmpty()) {
+        // Sacamos la última carta del mazo
+        Card c = deck.remove(deck.size() - 1);
+        // Se la damos al jugador que toque en la ronda
+        players.get(playerIndex).receiveCard(c);
+        
+        // Pasamos al siguiente jugador, y si llegamos al final, volvemos al primero
+        playerIndex = (playerIndex + 1) % players.size();
     }
+}
 
     public void addToWell(Card cardr){ well.add(cardr);} // Se añaden cartas al pozo al final de la lista
 
