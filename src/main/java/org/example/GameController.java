@@ -1,4 +1,5 @@
 package org.example;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ public class GameController {
         this.view = new GameView();
         this.scan = new Scanner(System.in);
         playerList = new ArrayList<>();
+        this.lieCounter = new HashMap<>();
     }
 
     public void play(){
@@ -21,12 +23,12 @@ public class GameController {
         
         int numTotal = 0;
         while (numTotal < 3 || numTotal > 6) {
-            System.out.println("¿Cuántos jugadores habrá en total? (3-6):");
+            System.out.println("¿How many players will there be in total? (3-6):"); // Cuántos jugadores habrá en total?
             numTotal = scan.nextInt();
             scan.nextLine();
         }
 
-        System.out.println("¿Cuántos de ellos serán humanos?");
+        System.out.println("¿How many of them will be human?"); // Cuántos de ellos serán humanos?
         int numHumans = scan.nextInt();
         scan.nextLine();
 
@@ -42,7 +44,11 @@ public class GameController {
             playerList.add(new ComputerPlayer("Machine " + (i - numHumans)));
         }
 
-        this.table = new Table(); 
+        for (Player p : playerList) {
+            lieCounter.put(p.getName(), 0);
+        }
+
+        this.table = new Table();
 
         table.shuffleDeck(); // Barajamos la baraja
         table.distribute(playerList); // Repartimos las cartas a cada jugador
@@ -72,8 +78,8 @@ public class GameController {
                         } else { // Comprobamos si es el turno de un jugador
                             
                             // Mostramos las cartas al jugador humano para que sepa qué tiene antes de decidir
-                            view.showHand(currentPlayer);
-                            System.out.println("\n" + currentPlayer.getName() + ", choose the rank for this round (1-7, 10-12):");
+                            view.startRound(currentPlayer);
+                            System.out.println("\n" + "Choose the rank for this round (1-7, 10-12):");
                             currentCardNumber = scan.nextInt(); // Leemos el número que el jugador humano elige para la ronda
                             scan.nextLine();
                             
@@ -89,9 +95,8 @@ public class GameController {
                         System.out.println("Invalid input. Please enter a number.");
                         scan.nextLine(); // Limpiar el buffer
                     }
-                            }
-                        }
-                        System.out.println(">>> ROUND THEME: " + currentCardNumber + " <<<"); // Informamos el número de la ronda
+                }
+                System.out.println(">>> ROUND THEME: " + currentCardNumber + " <<<"); // Informamos el número de la ronda
             }
 
             // LÓGICA DE TIRAR CARTA
@@ -104,14 +109,9 @@ public class GameController {
             }
             System.out.println(currentPlayer.getName() + " played " + cardsPlayed.size() + " cards as " + currentCardNumber); // Informamos por consola cuántas cartas se han jugado y qué número representaban
 
-            // Extraemos las cartas y las ponemos en el pozo
-            java.util.ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices); // Extraemos las cartas de la mano del jugador según los índices elegidos
-            for (Card c : cardsPlayed) {
-                table.addToWell(c); // Añadimos cada carta al pozo
-            }
-            System.out.println(currentPlayer.getName() + " played " + cardsPlayed.size() + " cards as " + currentCardNumber); // Informamos por consola cuántas cartas se han jugado y qué número representaban
-
             // LÓGICA DE DESCONFÍO
+            System.out.println("\n"+"**************************************"+"\n");
+            System.out.println(nextPlayer.getName()+", it's your turn");
             boolean distrust = nextPlayer.decideDistrust(table.getTotalWell()); // El siguiente jugador decide si desconfía (recibe el total de cartas en el pozo para tomar su decisión)
     
             if (distrust) { // Si decide desconfiar, comprobamos si el último jugador ha mentido o no
@@ -136,19 +136,17 @@ public class GameController {
                 continue; // Saltamos el resto del bucle para iniciar la siguiente ronda directamente
             }
 
-            // COMPROBACIÓN DE VICTORIA Y CAMBIO DE TURNO
-            // Si el jugador que acaba de tirar se ha quedado sin cartas, gana la partida
-            if (currentPlayer.getHand().isEmpty()) { 
-                System.out.println("¡¡¡ CONGRATULATIONS " + currentPlayer.getName() + " !!! You won the game!");
-                gameOver = true; // Rompemos el bucle while
+            // COMPROBACIÓN DE VICTORIA
+            if (currentPlayer.getHand().isEmpty()) {
+                System.out.println("\n¡¡¡ CONGRATULATIONS " + currentPlayer.getName() + " !!! You won the game!");
+                gameOver = true;
             } else {
-                // Si nadie ha ganado, pasamos el turno al siguiente jugador (0 -> 1 -> 2 -> 0)
-                turn = (turn + 1) % 3;
+                turn = (turn + 1) % playerList.size();
             }
         }
-        System.out.println("\nGame Over.");
-        System.out.println(">>> FINAL STATISTICS (Lies caught) <<<<");
-        lieCounter.forEach((name, count) -> { System.out.println(name + ": " + count + " times caught lying."); }); // Mostramos las estadísticas al final
-        System.out.println("\nThanks for playing Distrust!");
+    
+        // Estadísticas finales
+        System.out.println("\n--- FINAL STATISTICS (Lies caught) ---");
+        lieCounter.forEach((name, count) -> System.out.println(name + ": " + count + " times."));
     }
 }

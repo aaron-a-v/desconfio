@@ -18,29 +18,19 @@ public class GameView {
         System.out.println("5º. The game will continue until one of the 3 runs out of cards");
     }
 
-    public void showGreeting(String playerName) { // Mensaje de bienvenida a los PLayers
-        System.out.println("Your welcome player " + playerName);
-    }
+    public void showTable(java.util.ArrayList<Player> allPlayers, Player currentPlayer, int cardsWell) {
+        System.out.println("\n******** ESTADO DE LA MESA ********");
 
-    public String askPlayerName1(){ // Preguntar por sus nombres
-        System.out.println("Write your name Player1: ");
-        return scan.nextLine();
-    }
-
-    public String askPlayerName2(){ // Preguntar por sus nombres
-        System.out.println("Write your name Player2: ");
-        return scan.nextLine();
-    }
-
-    public void showTable(ArrayList<Player> allPlayers, Player currentPlayer, int cardsWell) {
-    System.out.println("\n******** ESTADO DE LA MESA *******");
-    for (Player p : allPlayers) {
-        if (p != currentPlayer) {
-            System.out.println("Cartas de " + p.getName() + ": " + p.getHand().size());
+        // Recorremos la lista de todos los jugadores
+        for (Player p : allPlayers) {
+            // Solo mostramos las cartas de los rivales (los que no son el jugador actual)
+            if (p != currentPlayer) {
+                System.out.println("Cartas de " + p.getName() + ": " + p.getHand().size());
+            }
         }
-    }
-    System.out.println("Cartas en el Pozo: " + cardsWell);
-    System.out.println("**********************************");
+
+        System.out.println("Cartas en el Pozo: " + cardsWell);
+        System.out.println("**********************************\n");
     }
 
     public void showHand(Player p) {
@@ -50,13 +40,16 @@ public class GameView {
         }
     }
 
-    public int[] askPlayerChoices(Player p) {
+    public void startRound(Player p){
         System.out.println("\n" + p.getName() + ", it's your turn.");
-        System.out.println("Your cards (choose one or more. Example: 1 3):");
-        
-        // Mostramos la mano
+        System.out.println("This are your cards:");
         showHand(p);
-        
+    }
+
+    public int[] askPlayerChoices(Player p) {
+
+        System.out.println("Your cards (choose one or more. Example: 1 3):");
+        showHand(p); // Mostramos la mano
         System.out.println("Write you election:");
 
         // Leemos la línea completa (ej: "1 2 4")

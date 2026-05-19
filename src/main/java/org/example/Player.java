@@ -2,9 +2,9 @@ package org.example;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Player {
-    private String name;
-    private ArrayList<Card> hand;
+public abstract class Player {
+    protected String name;
+    protected ArrayList<Card> hand; // Debe ser protected para poder usarlo en las clases hijas
 
     public Player(String name){
         this.name = name;
@@ -17,7 +17,7 @@ public class Player {
 
     // Métodos abstractos que cada tipo de jugador implementará a su manera
     public abstract int[] decidePlay(int currentRank);
-    public abstract boolean decideDistrust(int totalWell){}
+    public abstract boolean decideDistrust(int totalWell);
 
     public ArrayList<Card> extractMultipleCards(int[] indices) { // Método que acepte el array de índices
         ArrayList<Card> chosenCards = new ArrayList<>();

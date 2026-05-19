@@ -10,10 +10,6 @@ public class HumanPlayer extends Player {
         this.view = view;
     }
 
-    public String getName() {
-        return name;
-    }
-
     @Override
     public int[] decidePlay(int currentRank) {
         return view.askPlayerChoices(this);

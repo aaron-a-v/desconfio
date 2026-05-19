@@ -8,7 +8,7 @@ public class ComputerPlayer extends Player {
 
 
     @Override
-    public int decidePlay(int numplay) { // La máquina selecciona su jugada
+    public int[] decidePlay(int numplay) { // La máquina selecciona su jugada
         // La máquina comprueba si tiene cartas del número que se está jugando
         int find = -1;
         for (int i = 0; i < hand.size(); i++) { // La máquina recorre su mano
