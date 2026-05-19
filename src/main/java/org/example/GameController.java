@@ -72,8 +72,9 @@ public class GameController {
                         } else { // Comprobamos si es el turno de un jugador
                             
                             // Mostramos las cartas al jugador humano para que sepa qué tiene antes de decidir
+                            view.showHand(currentPlayer);
                             System.out.println("\n" + currentPlayer.getName() + ", choose the rank for this round (1-7, 10-12):");
-                            currentCardNumber = scan.nextInt();
+                            currentCardNumber = scan.nextInt(); // Leemos el número que el jugador humano elige para la ronda
                             scan.nextLine();
                             
                             // Lanzamos nuestra excepción personalizada si el número es inválido
@@ -81,10 +82,10 @@ public class GameController {
                                 throw new InvalidRankException("The rank " + currentCardNumber + " is not valid in the Spanish deck (1-7, 10-12).");
                             }
                         }
-                        validNumber = true;
-                    } catch (InvalidRankException e) {
+                        validNumber = true; // Si llegamos aquí, el número es válido y salimos del bucle
+                    } catch (InvalidRankException e) { // Capturamos la excepción personalizada y mostramos su mensaje
                         System.out.println("Error: " + e.getMessage());
-                    } catch (Exception e) {
+                    } catch (Exception e) { // Capturamos cualquier otra excepción para evitar que el programa se caiga
                         System.out.println("Invalid input. Please enter a number.");
                         scan.nextLine(); // Limpiar el buffer
                     }
@@ -94,60 +95,45 @@ public class GameController {
             }
 
             // LÓGICA DE TIRAR CARTA
-            int[] indices; // Índice de la carta elegida de la mano
-            if (currentPlayer.isComputer()) { // Si es el turno de la máquina
-                System.out.print("\n"+"Machine is thinking..."+"\n");
-                indices = new int[]{ currentPlayer.selectCardComputer(currentCardNumber) }; // Usa su lógica para decidir qué tirar
-            } else { // Si es el turno de un jugador
-                indices = view.askPlayerChoices(currentPlayer); // Elige que cartas de su mano va a tirar
-            }
+            int[] indices = currentPlayer.decidePlay(currentCardNumber); // El jugador decide qué cartas jugar (recibe un array de índices)
 
             // Extraemos las cartas y las ponemos en el pozo
-            java.util.ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices);
-            for (Card c : cardsPlayed) {
+            java.util.ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices); // Extraemos las cartas de la mano del jugador según los índices elegidos
+            for (Card c : cardsPlayed) { // Añadimos cada carta al pozo
                 table.addToWell(c);
             }
-            System.out.println(currentPlayer.getName() + " played " + cardsPlayed.size() + " cards as " + currentCardNumber);
+            System.out.println(currentPlayer.getName() + " played " + cardsPlayed.size() + " cards as " + currentCardNumber); // Informamos por consola cuántas cartas se han jugado y qué número representaban
+
+            // Extraemos las cartas y las ponemos en el pozo
+            java.util.ArrayList<Card> cardsPlayed = currentPlayer.extractMultipleCards(indices); // Extraemos las cartas de la mano del jugador según los índices elegidos
+            for (Card c : cardsPlayed) {
+                table.addToWell(c); // Añadimos cada carta al pozo
+            }
+            System.out.println(currentPlayer.getName() + " played " + cardsPlayed.size() + " cards as " + currentCardNumber); // Informamos por consola cuántas cartas se han jugado y qué número representaban
 
             // LÓGICA DE DESCONFÍO
-            boolean distrust; // Variable para saber si el siguiente jugador desconfía
-            if (nextPlayer.isComputer()) { // Si el siguiente es la máquina
-                distrust = nextPlayer.decideDistrust(table.getTotalWell()); // Decide según el tamaño del pozo
-            } else { // Si el siguiente es humano
-                System.out.println();
-                System.out.println(nextPlayer.getName() + ". It's your turn");
-                distrust = (view.askDistrust() == 'y'); // Lee 'y' para sí, cualquier otra cosa para no
-            }
-
-            // DECISIÓN DE DESCONFIAR
-            if (distrust) { // Si el jugador siguiente decidió desconfiar
-                // Miramos la carta real que se acaba de jugar en el pozo
-                Card lastCard = table.peekLastCard(); 
-                System.out.println("The card was actually: " + lastCard.toString());
-                
-                // Comparamos el número real con el número que se decía estar jugando
-                if (lastCard.getNum() == currentCardNumber || lastCard.getNum() == 1) { 
-                    // El jugador decía la verdad: El que desconfió pierde y se lleva el pozo
-                    System.out.println(">>> " + nextPlayer.getName() + " was WRONG! (The 1 acts as a Joker). They take the whole well.");
-                    table.deliverLoser(nextPlayer); // El método de Table entrega todas las cartas al perdedor
+            boolean distrust = nextPlayer.decideDistrust(table.getTotalWell()); // El siguiente jugador decide si desconfía (recibe el total de cartas en el pozo para tomar su decisión)
+    
+            if (distrust) { // Si decide desconfiar, comprobamos si el último jugador ha mentido o no
+                System.out.println("!!! " + nextPlayer.getName() + " decided to DISTRUST!");
+                Card lastCard = table.peekLastCard();
+                System.out.println("The last card played was: " + lastCard.toString());
+    
+                // El 1 actúa como comodín
+                if (lastCard.getNum() == currentCardNumber || lastCard.getNum() == 1) { // Si el número de la última carta coincide con el número de la ronda, o es un comodín, el siguiente jugador se ha equivocado al desconfiar
+                    System.out.println(">>> " + nextPlayer.getName() + " was WRONG! They take the whole well.");
+                    table.deliverLoser(nextPlayer);
                 } else {
-                    // El jugador mentía: El jugador actual pierde y se lleva el pozo
-                    System.out.println(">>> " + currentPlayer.getName() + " was CAUGHT LYING! They take the whole well.");
-                    int currentLies = lieCounter.get(currentPlayer.getName());
-                    lieCounter.put(currentPlayer.getName(), currentLies + 1); // Actualizamos el Hashmap para el jugador que mintió
-                    table.deliverLoser(currentPlayer); // El mentiroso recibe el castigo
+                    System.out.println(">>> " + currentPlayer.getName() + " was CAUGHT LYING! They take the whole well."); // Si no coincide, el jugador actual ha mentido y ha sido pillado
+                    lieCounter.put(currentPlayer.getName(), lieCounter.get(currentPlayer.getName()) + 1);
+                    table.deliverLoser(currentPlayer);
                 }
-                
-                // Tras un desconfío, el pozo queda vacío y se reinicia el tema de la ronda
-                currentCardNumber = -1; 
-
-                // Cambiamos el turno de escoger carta al siguiente jugador:
-                int queDesconfioIndex = (turn + 1) % 3; 
-                turn = (queDesconfioIndex + 1) % 3; // El turno pasa al siguiente del que desconfió
-                System.out.println("\n--- NEW ROUND! It's " + players[turn].getName() + "'s turn to choose a number ---");
-                
-                // Saltamos el resto del bucle para volver al inicio con el nuevo turno
-                continue;
+    
+                currentCardNumber = -1; // Reseteamos el número de la ronda porque el pozo se ha vaciado tras el desconfío
+                // Tras un desconfío, el turno pasa al siguiente del que desconfió para iniciar nueva ronda
+                int indexNext = (playerList.indexOf(nextPlayer) + 1) % playerList.size(); // Calculamos el índice del siguiente jugador al que desconfiaba
+                turn = indexNext; // Establecemos el turno al siguiente jugador para que empiece la nueva ronda
+                continue; // Saltamos el resto del bucle para iniciar la siguiente ronda directamente
             }
 
             // COMPROBACIÓN DE VICTORIA Y CAMBIO DE TURNO

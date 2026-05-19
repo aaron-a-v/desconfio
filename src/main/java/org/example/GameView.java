@@ -41,16 +41,21 @@ public class GameView {
     }
     System.out.println("Cartas en el Pozo: " + cardsWell);
     System.out.println("**********************************");
-}
+    }
+
+    public void showHand(Player p) {
+       // Mostramos la mano
+        for (int i = 0; i < p.getHand().size(); i++) {
+            System.out.println((i + 1) + " - " + p.getHand().get(i).toString());
+        }
+    }
 
     public int[] askPlayerChoices(Player p) {
         System.out.println("\n" + p.getName() + ", it's your turn.");
         System.out.println("Your cards (choose one or more. Example: 1 3):");
         
         // Mostramos la mano
-        for (int i = 0; i < p.getHand().size(); i++) {
-            System.out.println((i + 1) + " - " + p.getHand().get(i).toString());
-        }
+        showHand(p);
         
         System.out.println("Write you election:");
 
