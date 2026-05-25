@@ -123,16 +123,15 @@ public class GameController {
                 if (lastCard.getNum() == currentCardNumber || lastCard.getNum() == 1) { // Si el número de la última carta coincide con el número de la ronda, o es un comodín, el siguiente jugador se ha equivocado al desconfiar
                     System.out.println(">>> " + nextPlayer.getName() + " was WRONG! They take the whole well.");
                     table.deliverLoser(nextPlayer);
+                    turn = (playerList.indexOf(nextPlayer) + 1) % playerList.size(); // Fallo al desconfiar, inicia el jugador siguiente al que desconfió mal
                 } else {
                     System.out.println(">>> " + currentPlayer.getName() + " was CAUGHT LYING! They take the whole well."); // Si no coincide, el jugador actual ha mentido y ha sido pillado
                     lieCounter.put(currentPlayer.getName(), lieCounter.get(currentPlayer.getName()) + 1);
                     table.deliverLoser(currentPlayer);
+                    turn = playerList.indexOf(nextPlayer); // Desconfió bien pasa el turno a la persona que desconfió bien
                 }
     
                 currentCardNumber = -1; // Reseteamos el número de la ronda porque el pozo se ha vaciado tras el desconfío
-                // Tras un desconfío, el turno pasa al siguiente del que desconfió para iniciar nueva ronda
-                int indexNext = (playerList.indexOf(nextPlayer) + 1) % playerList.size(); // Calculamos el índice del siguiente jugador al que desconfiaba
-                turn = indexNext; // Establecemos el turno al siguiente jugador para que empiece la nueva ronda
                 continue; // Saltamos el resto del bucle para iniciar la siguiente ronda directamente
             }
 
