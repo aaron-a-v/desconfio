@@ -47,20 +47,57 @@ public class GameView {
     }
 
     public int[] askPlayerChoices(Player p) {
+        int[] indices = null;
+        boolean selectionValid = false;
 
-        System.out.println("Your cards (choose one or more. Example: 1 3):");
-        showHand(p); // Mostramos la mano
-        System.out.println("Write you election:");
+        // El bucle no termina hasta que la entrada del usuario sea 100% correcta
+        while (!selectionValid) {
+            System.out.println("Your cards (choose one or more. Example: 1 3):");
+            showHand(p); // Mostramos la mano con las opciones numeradas (1, 2, 3...)
+            System.out.println("Write your election:");
 
-        // Leemos la línea completa (ej: "1 2 4")
-        String input = scan.nextLine();
-        String[] parts = input.split(" "); // Dividimos por espacios
-        int[] indices = new int[parts.length];
+            // Eliminamos los espacios vacíos accidentales al principio y al final de la línea
+            String input = scan.nextLine().trim();
 
-        for (int i = 0; i < parts.length; i++) {
-            // Restamos 1 para convertir la elección del usuario a los índices
-            indices[i] = Integer.parseInt(parts[i]) - 1;
+            // Si el usuario pulsa Enter directamente sin escribir nada
+            if (input.isEmpty()) {
+                System.out.println("\n[ERROR] You must select at least one card. Try again.\n");
+                continue;
+            }
+
+            // Usamos "\\s+" para que java lo procese aunque se añadan más espacios intermedios (ej: "1   3")
+            String[] parts = input.split("\\s+");
+            indices = new int[parts.length];
+            boolean syntaxError = false;
+
+            for (int i = 0; i < parts.length; i++) {
+                try {
+                    // Restamos 1 para convertir la opción al índice de Java (0, 1...)
+                    int choice = Integer.parseInt(parts[i]) - 1;
+
+                    // Validamos si el índice existe en la mano del jugador
+                    if (choice < 0 || choice >= p.getHand().size()) {
+                        System.out.println("\n[ERROR] The option '" + parts[i] + "' is not a valid card. You only have options from 1 to " + p.getHand().size() + ".\n");
+                        syntaxError = true;
+                        break; // Rompe el bucle for para volver al principio
+                    }
+
+                    indices[i] = choice;
+
+                } catch (NumberFormatException e) {
+                    // Si el usuario introduce texto, letras o caracteres extraños
+                    System.out.println("\n[ERROR] Invalid format. Please write only numbers separated by spaces (Example: 1 3).\n");
+                    syntaxError = true;
+                    break; // Rompe el mazo de conversión para reiniciar la lectura
+                }
+            }
+
+            // Si el proceso del for terminó sin activar ninguna alerta de error, la selección es válida
+            if (!syntaxError) {
+                selectionValid = true;
+            }
         }
+
         return indices;
     }
 
