@@ -30,7 +30,7 @@ public class GameView {
         }
 
         System.out.println("Cartas en el Pozo: " + cardsWell);
-        System.out.println("**********************************\n");
+        System.out.println("**********************************");
     }
 
     public void showHand(Player p) {

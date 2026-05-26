@@ -96,10 +96,10 @@ public class GameController {
                         scan.nextLine(); // Limpiar el buffer
                     }
                 }
-                System.out.println(">>> ROUND THEME: " + currentCardNumber + " <<<"); // Informamos el número de la ronda
             }
 
             // LÓGICA DE TIRAR CARTA
+            System.out.println(">>> ROUND THEME: " + currentCardNumber + " <<<"); // Informamos el número de la ronda
             int[] indices = currentPlayer.decidePlay(currentCardNumber); // El jugador decide qué cartas jugar (recibe un array de índices)
 
             // Extraemos las cartas y las ponemos en el pozo
@@ -110,8 +110,8 @@ public class GameController {
             System.out.println(currentPlayer.getName() + " played " + cardsPlayed.size() + " cards as " + currentCardNumber); // Informamos por consola cuántas cartas se han jugado y qué número representaban
 
             // LÓGICA DE DESCONFÍO
-            System.out.println("\n"+"**************************************"+"\n");
-            System.out.println(nextPlayer.getName()+", it's your turn");
+            System.out.println("\n"+"**************************************");
+            view.startRound(nextPlayer);
             boolean distrust = nextPlayer.decideDistrust(table.getTotalWell()); // El siguiente jugador decide si desconfía (recibe el total de cartas en el pozo para tomar su decisión)
     
             if (distrust) { // Si decide desconfiar, comprobamos si el último jugador ha mentido o no
