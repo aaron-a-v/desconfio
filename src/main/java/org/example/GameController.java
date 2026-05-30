@@ -41,7 +41,10 @@ public class GameController {
         // Añadir humanos
         for (int i = 1; i <= numHumans; i++) {
             System.out.println("Player " + i + " name:");
-            playerList.add(new HumanPlayer(scan.nextLine(), view));
+            String name = scan.nextLine();
+            dao.consultarJugador(name); // Buscamos si el jugador actual ya tiene historial antes de meterlo al juego
+            playerList.add(new HumanPlayer(name, view));
+            lieCounter.put(name, 0);
         }
 
         // Añadir máquinas hasta completar el total

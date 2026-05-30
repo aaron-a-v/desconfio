@@ -106,4 +106,33 @@ public class DAO {
             System.out.println("Error trying to read the ranking: " + e.getMessage());
         }
     }
+
+    // Método para consultar las estadísticas de un jugador concreto (Operación de consulta específica)
+    public void consultarJugador(String nombreJugador) {
+        String sql = "SELECT games_won, total_lies_caught FROM stats_players WHERE name = ?";
+
+        try (Connection conexion = DriverManager.getConnection(url, usuario, password);
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+
+            // Pasamos el nombre del jugador al interrogante del WHERE
+            sentencia.setString(1, nombreJugador);
+
+            try (ResultSet resultado = sentencia.executeQuery()) {
+                if (resultado.next()) {
+                    // Si el jugador ya existe en la base de datos, mostramos sus datos históricos
+                    int won = resultado.getInt("games_won");
+                    int lies = resultado.getInt("total_lies_caught");
+                    System.out.println("\n[BD] ¡History found for " + nombreJugador + "!");
+                    System.out.println("-> Previously won games: " + won);
+                    System.out.println("-> Total lies caught: " + lies + "\n");
+                } else {
+                    // Si el SELECT no devuelve filas, es que es la primera vez que juega
+                    System.out.println("\n[BD] " + nombreJugador + " He's a new player. Good luck in your debut!\n");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error trying to query the player: " + e.getMessage());
+        }
+    }
 }
