@@ -10,16 +10,21 @@ public class GameController {
     private ArrayList<Player> playerList;
     private int currentCardNumber; // El número que se está jugando (ej. todos juegan "Ases")
     private java.util.HashMap<String, Integer> lieCounter; // Hashmap para contar las veces que pillaron a cada jugador
+    private DAO dao;
 
-    public GameController() {
+    public GameController(DAO dao) {
         this.view = new GameView();
         this.scan = new Scanner(System.in);
         playerList = new ArrayList<>();
         this.lieCounter = new HashMap<>();
+        this.dao = dao;
     }
 
     public void play(){
         view.showWelcome();
+
+        // Llamamos al DAO para mostrar el ranking antes de jugar ===
+        dao.mostrarLeaderboard();
         
         int numTotal = 0;
         while (numTotal < 3 || numTotal > 6) {
@@ -139,6 +144,10 @@ public class GameController {
             if (currentPlayer.getHand().isEmpty()) {
                 System.out.println("\n¡¡¡ CONGRATULATIONS " + currentPlayer.getName() + " !!! You won the game!");
                 gameOver = true;
+
+                // Guardamos los resultados acumulados en PostgreSQL
+                dao.guardarEstadisticas(currentPlayer.getName(), this.lieCounter);
+
             } else {
                 turn = (turn + 1) % playerList.size();
             }
@@ -147,5 +156,8 @@ public class GameController {
         // Estadísticas finales
         System.out.println("\n--- FINAL STATISTICS (Lies caught) ---");
         lieCounter.forEach((name, count) -> System.out.println(name + ": " + count + " times."));
+
+        // Volvemos a mostrar el ranking ya actualizado con los nuevos puntos ===
+        dao.mostrarLeaderboard();
     }
 }
