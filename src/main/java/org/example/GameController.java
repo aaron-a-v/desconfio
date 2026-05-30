@@ -40,7 +40,7 @@ public class GameController {
 
         // Añadir humanos
         for (int i = 1; i <= numHumans; i++) {
-            System.out.println("Nombre del jugador " + i + ":");
+            System.out.println("Player " + i + " name:");
             playerList.add(new HumanPlayer(scan.nextLine(), view));
         }
 

@@ -41,7 +41,7 @@ public class DAO {
                 filasModificadas = sentenciaUpdate.executeUpdate();
 
             } catch (SQLException e) {
-                System.out.println("Error al intentar actualizar: " + e.getMessage());
+                System.out.println("Error trying to update: " + e.getMessage());
             }
 
             // Si filasModificadas es 0 significa que el jugador es nuevo
@@ -61,11 +61,11 @@ public class DAO {
                     sentenciaInsert.executeUpdate();
 
                 } catch (SQLException e) {
-                    System.out.println("Error al intentar insertar: " + e.getMessage());
+                    System.out.println("Error trying to insert: " + e.getMessage());
                 }
             }
         }
-        System.out.println("[DAO] Estadísticas de la partida guardadas correctamente.");
+        System.out.println("Game statistics saved successfully.");
     }
 
     public void mostrarLeaderboard() {
@@ -98,12 +98,12 @@ public class DAO {
 
             // Si la tabla estaba vacía y el bucle while no se ejecutó, avisamos
             if (!tieneDatos) {
-                System.out.println("No hay estadísticas registradas todavía. ¡Juega una partida!");
+                System.out.println("No statistics are recorded yet. Play a game!");
             }
             System.out.println("====================================================\n");
 
         } catch (SQLException e) {
-            System.out.println("Error al intentar leer el ranking: " + e.getMessage());
+            System.out.println("Error trying to read the ranking: " + e.getMessage());
         }
     }
 }
