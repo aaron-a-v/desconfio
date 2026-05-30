@@ -19,17 +19,17 @@ public class GameView {
     }
 
     public void showTable(java.util.ArrayList<Player> allPlayers, Player currentPlayer, int cardsWell) {
-        System.out.println("\n******** ESTADO DE LA MESA ********");
+        System.out.println("\n******** STATE OF THE TABLE ********");
 
         // Recorremos la lista de todos los jugadores
         for (Player p : allPlayers) {
             // Solo mostramos las cartas de los rivales (los que no son el jugador actual)
             if (p != currentPlayer) {
-                System.out.println("Cartas de " + p.getName() + ": " + p.getHand().size());
+                System.out.println("Cards of " + p.getName() + ": " + p.getHand().size());
             }
         }
 
-        System.out.println("Cartas en el Pozo: " + cardsWell);
+        System.out.println("Cards in the Well: " + cardsWell);
         System.out.println("**********************************");
     }
 
