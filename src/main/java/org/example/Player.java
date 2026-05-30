@@ -2,7 +2,11 @@ package org.example;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Player {
+public abstract class Player implements Jugable {
+
+    // no hace falta declarar aquí los métodos abstractos de la interfaz
+    // porque al implementar Jugable, hereda la obligación de que sus hijos los tengan.
+
     protected String name;
     protected ArrayList<Card> hand; // Debe ser protected para poder usarlo en las clases hijas
 
